@@ -19,7 +19,9 @@ public class ProjectClient {
 
     @CircuitBreaker(name = "project", fallbackMethod = "getProjectFromCache")
     public ProjectInfo getProject(long projectId) {
-        return restOperations.getForObject(endpoint + "/projects/" + projectId, ProjectInfo.class);
+        ProjectInfo projectInfo = restOperations.getForObject(endpoint + "/projects/" + projectId, ProjectInfo.class);
+        projectsCache.put(projectId,projectInfo);
+        return projectInfo;
     }
 
     public ProjectInfo getProjectFromCache(long projectId, Throwable cause) {
